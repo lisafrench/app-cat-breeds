@@ -1,23 +1,31 @@
-import React from "react";
+import React, { ChangeEvent } from "react";
 import { Form } from "react-bootstrap";
+
+interface Props {
+  onChange: (event: ChangeEvent) => void;
+}
 
 interface State {
   catBreedOptions: [];
+  loading: boolean;
 }
 
-export default class Selector extends React.Component<any, State> {
+export default class Selector extends React.Component<Props, State> {
   constructor(props: any) {
     super(props);
+
     this.state = {
-      catBreedOptions: []
+      catBreedOptions: [],
+      loading: false
     };
   }
 
-  componentWillMount = () => {
-    this.renderAllCatBreedOptions();
-  };
+  componentDidMount() {
+    this.setState({ loading: true });
+    this.renderCatBreedOptions();
+  }
 
-  renderAllCatBreedOptions = () => {
+  renderCatBreedOptions = () => {
     fetch("https://api.thecatapi.com/v1/breeds")
       .then(results => {
         return results.json();
@@ -28,7 +36,7 @@ export default class Selector extends React.Component<any, State> {
             {breed.name}
           </option>
         ));
-        this.setState({ catBreedOptions });
+        this.setState({ catBreedOptions, loading: false });
       })
       .catch(function(err) {
         console.log("Fetch error: ", err);
@@ -36,6 +44,10 @@ export default class Selector extends React.Component<any, State> {
   };
 
   render() {
+    if (this.state.loading === true) {
+      return null;
+    }
+
     return (
       <Form>
         <Form.Group>
