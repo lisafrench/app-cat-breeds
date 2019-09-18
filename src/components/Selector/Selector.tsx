@@ -38,8 +38,8 @@ export default class Selector extends React.Component<Props, State> {
         ));
         this.setState({ catBreedOptions, loading: false });
       })
-      .catch(function(err) {
-        console.log("Fetch error: ", err);
+      .catch(function(error) {
+        console.log("Fetch error: ", error);
       });
   };
 
